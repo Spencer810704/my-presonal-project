@@ -7,9 +7,9 @@
 - [x]  架構圖
 - [ ]  服務安裝筆記
     - [x]  Zabbix-Server
-    - [ ]  Nginx
-    - [ ]  PHP
-    - [ ]  MariaDB
+        - [x]  Nginx
+        - [x]  PHP
+        - [x]  MariaDB
 - [ ]  代碼筆記
 
 # Introduction
