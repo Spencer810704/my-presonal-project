@@ -1,28 +1,57 @@
-# Progress
 
----
+- [1. Progress](#1-progress)
+- [2. Introduction](#2-introduction)
+  - [2.1. Architecture](#21-architecture)
+  - [2.2. Component](#22-component)
+- [3. Installation](#3-installation)
+  - [3.1. Component](#31-component)
+    - [3.1.1. Zabbix-Server](#311-zabbix-server)
+    - [3.1.2. MariaDB](#312-mariadb)
+    - [3.1.3. Nginx](#313-nginx)
+    - [3.1.4. PHP](#314-php)
+    - [3.1.5. Zabbix-Server](#315-zabbix-server)
+    - [3.1.6. Ansible](#316-ansible)
+    - [3.1.7. Jenkins](#317-jenkins)
+    - [3.1.8. Proxmox VE](#318-proxmox-ve)
+    - [3.1.9. Terraform](#319-terraform)
+    - [3.1.10. CMDB](#3110-cmdb)
+- [4. CMDB Project Documentation](#4-cmdb-project-documentation)
+  - [項目根目錄結構](#項目根目錄結構)
 
-持續更新內容中.....
+
+# 1. Progress
+
+內容持續更新中.....
 
 - [x]  架構圖
-- [ ]  服務安裝筆記
+- [x]  服務安裝筆記
     - [x]  Zabbix-Server
         - [x]  Nginx
         - [x]  PHP
         - [x]  MariaDB
-- [ ]  代碼筆記
+    - [x]  Jenkins
+        - [x]  OpenJDK
+        - [x]  Jenkins
+    - [x]  Promox VE
+    - [x]  Terraform
+    - [x]  Ansible
+- [x]  CMDB
+    - [x]  依賴服務
+- [x]  CMDB項目細節
+    - [x]  根目錄結構
+    - [ ]  Table Schema
+    - [ ]  各App用途
 
-# Introduction
+# 2. Introduction
 
----
 
-## Architecture
+## 2.1. Architecture
 
 ![Topology](Architecture.png)
 
 近年資訊業的蓬勃發展下，很多工具或是雲平台如雨後春筍般的出現，像是GCP、Azure、阿里雲、騰訊雲等等平台或像是Ansible、Terraform、SaltStack這種Infrastructure As Code的配置管理工具，而每一家公司至少也都會使用一至多個雲平台，並且當一個雲平台下的帳號不只一個，帳號管理數量一多，常常會發生一些奇葩的事情，項是帳號密碼被某個工程師修改了，但是卻沒有讓到團隊成員知道，或者是某個服務器遷移至某個帳號下管理，團隊內部資訊同樣沒有同步，造成其他成員嘗試多個帳號後才發現已經遷移，而有些團隊很多時候都在這種事情上浪費人力，而這種情況需要被解決，透過一些文章了解ITIL裡面提到的CMDB概念 : 配置管理資料庫(CMDB)是與IT系統所有組件相關的信息庫。它包含IT基礎架構配置項的詳細信息，才衍生出了這個想法，讓團隊成員能夠透過CMDB集中化管理資產訊息、配置等等，並且結合常見的Devops Tools整合所有雲平台內容資產訊息，而團隊成員只需要專注在CMDB上進行機器或者配置的新增、刪除、修改、更新，而不需要再耗費其他時間去熟悉雲平台配置，讓其他成員更有時間去專注在他們的專業領域上。
 
-## Component
+## 2.2. Component
 
 使用原因
 
@@ -34,13 +63,13 @@
 - Zabbix : 服務器建立後可以監控相關資源，透過Ansible配置，一方面也是能夠學習監控領域。
 
 
-# Installation
+# 3. Installation
 
----
 
-## Component
+## 3.1. Component
 
-### Zabbix-Server
+
+### 3.1.1. Zabbix-Server
 
 組成元件
 
@@ -66,7 +95,8 @@
 - Nginx
 - Zabbix-Server
 
-MariaDB ，此部分安裝使用最簡單的Yum套件管理工具進行安裝
+### 3.1.2. MariaDB 
+此部分安裝使用最簡單的Yum套件管理工具進行安裝
 
 版本
 
@@ -123,7 +153,7 @@ MariaDB ，此部分安裝使用最簡單的Yum套件管理工具進行安裝
     MariaDB [(none)]> GRANT ALL PRIVILEGES ON zabbix.* to 'zabbix'@'%' IDENTIFIED  BY '123456' WITH GRANT OPTION;
     ```
 
-### Nginx
+### 3.1.3. Nginx
 
 使用編譯方式進行安裝。
 
@@ -280,7 +310,7 @@ MariaDB ，此部分安裝使用最簡單的Yum套件管理工具進行安裝
     [root@zabbix-server ~]# systemctl enable nginx.service
     ```
 
-### PHP
+### 3.1.4. PHP
 
 使用編譯方式進行安裝。
 
@@ -402,7 +432,7 @@ MariaDB ，此部分安裝使用最簡單的Yum套件管理工具進行安裝
 
     ```
 
-### Zabbix-Server
+### 3.1.5. Zabbix-Server
 
 版本
 
@@ -642,3 +672,248 @@ MariaDB ，此部分安裝使用最簡單的Yum套件管理工具進行安裝
     如果有其他錯誤 , 也是先檢查php.ini文件是否達到需求 , 因為zabbix 是檢測php.ini的
 
 14. 配置完成Zabbix後，記得將setup.php檔案刪除。
+
+
+
+
+### 3.1.6. Ansible
+
+此部分安裝使用最簡單的Yum套件管理工具進行安裝Ansible以及其依賴工具。
+
+目錄位置
+
+- 主配置目錄 : `/etc/ansible`
+- 主配置檔 : `/etc/ansibleansible.cfg`
+- 默認hosts位置 : `/etc/ansible/hosts`
+
+建置步驟
+
+1. 安裝Ansible。
+
+    ```bash
+    yum install ansible
+    ```
+
+2. 查看版本號確認安裝成功。
+
+    ```bash
+    ansible --version
+
+    # ansible 2.9.13
+    #  config file = /etc/ansible/ansible.cfg
+    #  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+    #  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+    #  executable location = /usr/bin/ansible
+    #  python version = 2.7.5 (default, Apr  2 2020, 13:16:51) [GCC 4.8.5 20150623 (Red Hat 4.8.5-39)]
+    ```
+
+### 3.1.7. Jenkins
+
+組成元件
+
+- OpenJDK 1.8
+- Jenkins 2.249.2
+
+此部分安裝使用最簡單的Yum套件管理工具進行安裝JDK以及Jenkins
+
+執行用戶
+
+- jenkins
+
+目錄位置
+
+- 主目錄 : `/var/lib/jenkins`
+- 日誌路徑 :  `/var/log/jenkins/jenkins.log`
+- 配置檔案路徑 :  `/etc/sysconfig/jenkins`
+
+建置步驟
+
+1. 安裝OpenJDK以及確認版本
+
+    ```bash
+    yum install -y java-1.8.0-openjdk
+
+    java -version
+    # openjdk version "1.8.0_262"
+    # OpenJDK Runtime Environment (build 1.8.0_262-b10)
+    # OpenJDK 64-Bit Server VM (build 25.262-b10, mixed mode)
+    ```
+
+2. 加入Jenkins Yum Repository以及Import key
+
+    ```bash
+    wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    ```
+
+3. 安裝Jenkins
+
+    ```bash
+    yum install jenkins
+    ```
+
+4. 啟動服務及設置開機啟動
+
+    ```bash
+    systemctl start jenkins
+    systemctl enable jenkins
+    ```
+
+### 3.1.8. Proxmox VE
+
+[https://wiki.freedomstu.com/books/proxmox-ve-虛擬系統記錄/page/proxmox-ve-安裝流程](https://wiki.freedomstu.com/books/proxmox-ve-%E8%99%9B%E6%93%AC%E7%B3%BB%E7%B5%B1%E8%A8%98%E9%8C%84/page/proxmox-ve-%E5%AE%89%E8%A3%9D%E6%B5%81%E7%A8%8B)
+
+### 3.1.9. Terraform
+
+Terraform 的安裝非常簡單，直接把官方提供的二進制可執行文件保存到 /usr/local/bin/ 目錄下，當然這個目錄會被添加到 PATH 環境變量中，就能夠直接使用terraform命令。
+
+完成後透過`terraform version`命令檢查一下版本號。
+
+### 3.1.10. CMDB
+
+使用的是三層架構
+
+
+![三層架構](CMDB_Project_Architecture.jpg)
+
+服務面向組件
+- `Nginx` : 作為Reverse Proxy，將客戶端請求轉發到後端WSGI Web Server (未來慢慢將專案前後端進行分離，由Nginx處理前端靜態資源，而Uwsgi處理動態資源請求)。
+- `uWSGI` : 實現WSGI協議的Web Server，透過WSGI協議與WSGI Application溝通(Django、Flask、Tornado)，為何需要Nginx作為反向代理的原因是因為uWSGI對靜態資源處理效率不如Nginx，也可以透過Nginx做負載平衡。
+- `MySQL` : 數據存儲。
+
+系統管理面向組件
+
+* `supervisord` : 守護進程，用於管理uWSGI程序存活，若崩潰自動重啟，也因為配置檔案容易設置的原因，就沒有考慮使用systemd。
+
+
+Nginx配置
+1. 設置Vhost目錄，依照業務功能拆分配置檔案，透過主配置檔include相應配置檔，易於後續管理
+   ```shell
+    server {
+        listen 80;
+        server_name cmdb.aspk7.com ;
+
+        access_log logs/access_cmdb.log;
+        error_log logs/error_cmdb.log;
+
+        # 將除了靜態資源內容(URI非/static)的請求全部轉發至uWSGI
+        location / {
+            include uwsgi_params;
+                    
+            # Nginx與Uwsgi在此專案是存在同一個Server上的，uWSGI是監聽127.0.0.1:9005。
+            uwsgi_pass 127.0.0.1:9005;
+            
+            # nginx 請求到 uwsgi 超時設置
+            uwsgi_send_timeout 30s;
+            
+            # uwsgi 返回數據到 nginx 的超時設置
+            uwsgi_read_timeout 30s;
+        }
+        
+        # 將請求靜態資源內容的請求，使用專案靜態資源目錄作為相對存取位置。
+        location /static {
+            alias /web/cmdb/static/; 
+        }
+    }
+   ```
+
+supervisor配置 
+* 使用`supervisor`服務管理uwsgi進程
+* 配置檔案路徑：`/etc/supervisord.d/cmdb.ini`
+  ```shell
+    [program:cmdb]
+    # --ini 後面路指定到目錄下的uwsgi.ini
+    command=/usr/local/bin/uwsgi --ini /web/cmdb/uwsgi.ini
+    directory=/web/cmdb/
+    startsecs=0
+    stopwaitsecs=0
+    autostart=true
+    autorestart=true
+  ```
+* 啟動方式：`supervisorctl start cmdb`
+* 停止方式：`supervisorctl stop cmdb`
+
+
+uwsgi配置
+* 配置檔路徑：`/web/cmdb/uwsgi.ini`
+  ```shell
+    [uwsgi]
+    # 设置虚拟目录, 独立套件版本避免冲突
+    virtualenv = /web/cmdb/venv/
+
+    # 指定uwsgi在哪個目錄, 指定專案根目錄
+    chdir = /web/cmdb/
+
+    # 加载指定的WSGI文件
+    wsgi-file = cmdb/wsgi.py
+
+    # 告知uWSGI使用程序入口名称为app, 一般若不指定callable的入口名称的话默认为applivation
+    callable = application
+
+    # PID存放位置
+    pidfile = %(chdir)/logs/uwsgi.pid
+    # 指定uwsgi的客户端将要连接的socket的路径（使用UNIX socket的情况）或者地址（使用网络地址的情况）
+    socket = 127.0.0.1:9005
+
+    # 设置线程数量以及进程数
+    process = 1
+    threads = 2
+
+    # 使Process在后台运行 , 并将日志打印到指定的文件内
+    logto = %(chdir)/logs/uwsgi.log
+
+    # 设置日志
+    logdate = %%Y-%%m-%%d %%H:%%M:%%S
+
+    # 代码有更动后自动进行reload
+    py-autoreload = 1
+
+    # 启动主进程
+    master = true
+
+    # 設置Buffer , 避免在uWSGI寫入OSError: write error
+    buffer-size=8192
+    ignore-sigpipe=true
+    ignore-write-errors=true
+  ```
+* uWSGI日誌路徑：`/web/cmdb/logs/uwsgi.log`
+* PID存放路徑：`/web/cmdb/logs/uwsgi.pid`
+
+
+
+# 4. CMDB Project Documentation
+
+## 項目根目錄結構
+
+```shell
+.
+├── assets
+├── cmdb
+├── login
+├── logs
+├── manage.py
+├── ReadMe.md
+├── requirements.txt
+├── scripts
+├── static
+├── templates
+├── uwsgi.ini
+└── venv
+```
+
+各目錄及檔案用途說明
+- `cmdb`：專案入口目錄
+    - `settings.py`：主配置文件 , 全域變數配置 , 例如DB連接資訊、JWT過期時間配置等。
+    - `wsgi.py`：uwsgi入口文件。
+    - `urls.py`：一級路由配置 , 若有新增其他的Django APP , 需要從一級路由引入 , 目前有兩個APP分別為`assets`、`login`。
+- `assets`：展示模塊，細部說明請移動至assets app目錄結構說明章節。
+- `login`：登入模塊，細部說明請移動至login APP目錄結構說明 。
+- `logs`：存放uwsgi日誌內容以及PID文件。
+- `manage.py`：Django內建管理工具。
+- `requirements.txt`：項目所需安裝第三方套件。
+- `scripts`：腳本類的放置路徑，例如刷新CDN的代碼。
+    - `config/account.ini`：放置阿里雲API配置，如Key & Secret有修改，在此更改。
+- `static`：共用靜態文件存放位置，某一些頁面的靜態資源都是一樣的 ，所以將共用資源抽離出來放置在該目錄之下。
+- `templates`：基底模板，項目內的其他html頁面會繼承該基底模板在進行功能的擴展。
+- `uwsgi.ini`：uwsgi服務配置文件。
+- `venv`：Python虛擬環境。
