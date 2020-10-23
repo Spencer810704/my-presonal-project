@@ -16,6 +16,7 @@
     - [3.1.9. Terraform](#319-terraform)
     - [3.1.10. CMDB](#3110-cmdb)
 - [4. CMDB Project Documentation](#4-cmdb-project-documentation)
+  - [Table Schema](#table-schema)
   - [項目根目錄結構](#項目根目錄結構)
 
 
@@ -785,6 +786,19 @@ Terraform 的安裝非常簡單，直接把官方提供的二進制可執行文�
 
 * `supervisord` : 守護進程，用於管理uWSGI程序存活，若崩潰自動重啟，也因為配置檔案容易設置的原因，就沒有考慮使用systemd。
 
+MySQL配置
+1. 執行mysql_secure_installation進行安全性設置
+2. 建立CMDB用戶
+   ```shell
+   # 建立cmdb資料庫
+   MariaDB [(none)]> CREATE DATABASE cmdb;
+   
+   # 建立帳號(這裡沒有做安全性設置，給予任何主機連線cmdb帳號)
+   MariaDB [(none)]> CREATE USER 'cmdb'@'%' IDENTIFIED BY '123456' ;
+
+   # 給予cmdb資料庫中所有資料表的權限。
+   MariaDB [(none)]> GRANT ALL PRIVILEGES ON cmdb.* TO 'cmdb'@'%';
+   ```
 
 Nginx配置
 1. 設置Vhost目錄，依照業務功能拆分配置檔案，透過主配置檔include相應配置檔，易於後續管理
@@ -882,6 +896,9 @@ uwsgi配置
 
 
 # 4. CMDB Project Documentation
+
+## Table Schema
+
 
 ## 項目根目錄結構
 
